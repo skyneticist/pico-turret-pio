@@ -1,10 +1,6 @@
-build/CMakeFiles
-build/elf2uf2
-build/generated
-build/pico-sdk
-build/pioasm
+.vscode
+build
 cmake_install.cmake
 CMakeCache.txt
 Makefile
-
-.vscode
+.DS_Store
