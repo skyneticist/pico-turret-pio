@@ -1,0 +1,44 @@
+.program stepper_driver
+.side_set 1
+.wrap_target
+    pull block          ; pull data from TX FIFO to OSR when available
+    out y, 8            ; shift first 8 bits to scratch register y (uint_8t)
+    out x, 9            ; shift remaining 8 bits to scratch register x plus borrowed side bit
+inf_loop:
+    jmp y-- step side x ; jmp to step label if y scratch register is not empty
+    jmp done            ; jmp to done for cleanup if x
+step:
+    set pins, 1 [31]
+    set pins, 0 [31]
+    jmp x-- pause
+    jmp inf_loop
+pause:
+    nop [31]
+done:
+    out isr, 0          ; clear the internal shift register for next time
+.wrap
+
+% c-sdk {
+// Helper function (for use in C program) to initialize this PIO program
+void stepper_program_init(PIO pio, uint sm, uint offset, uint pin, float div) {
+
+    // Sets up state machine and wrap target. This function is automatically
+    // generated in stepper.pio.h.
+    pio_sm_config c = stepper_program_get_default_config(offset);
+
+    // Allow PIO to control GPIO pin (as output)
+    pio_gpio_init(pio, pin);
+
+    // Connect pin to SET pin (control with 'set' instruction)
+    sm_config_set_set_pins(&c, pin, 1);
+
+    // Set the pin direction to output (in PIO)
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+    
+    // Set the clock divider for the state machine
+    sm_config_set_clkdiv(&c, div);
+
+    // Load configuration and jump to start of the program
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}
