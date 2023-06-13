@@ -1,4 +1,4 @@
-# pico-turret-pio 🫒
+# 🫒 pico-turret-pio
 Raspberry Pi Pico - C SDK - Stepper via PIO - uart interrupt - multicore
 
 This is one of two parts 🥨 <br>
