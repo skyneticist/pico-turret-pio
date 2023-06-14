@@ -20,7 +20,7 @@ int main()
     init_stepper(&stepper_y, Y_AXIS, 10);
 
     // start RP2040 second core (core_1)
-    multicore_launch_core1(core1_main);
+    // multicore_launch_core1(core1_main);
 
     while (1) {
         fsm_process(&controller_x, &controller_y, &stepper_x, &stepper_y);

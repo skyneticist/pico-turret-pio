@@ -3,7 +3,10 @@
 
 void core1_main() {
     while (1) {
-        uart_read_data();
+        // How to run interrupt on this other core when 
+        // not running an infinite loop to update it?
+        
+        // uart_read_data(); 
         sleep_us(600);
     }
-}                                                                  
+}                                                                 
